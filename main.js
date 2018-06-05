@@ -20,18 +20,22 @@ let array=[
 let tip = document.querySelector('.tip');
 
 window.onload=function(){
-    if(!localStorage.getItem('disabled'))
-    setTimeout(()=>{
-        for(let i = 0; i < array.length; i++ ){
-        let radioItem = document.createElement('i');
-        radioItem.classList.add('radio-item');
-        radioItem.setAttribute('name', i+1);
-        document.querySelector('.radio-wrapper').appendChild(radioItem);
-        document.querySelector('.radio-item:first-child').classList.add('current');
-        }
-        tip.innerHTML=array[0];
-        document.querySelector('.notification').classList.remove('close');
-    },5000)
+    if(!localStorage.getItem('disabled')){
+        let radioItem;
+        setTimeout(()=>{
+            var fragment = document.createDocumentFragment();
+            for(let i = 0; i < array.length; i++ ){
+                radioItem = document.createElement('i');
+                radioItem.classList.add('radio-item');
+                radioItem.setAttribute('name', i+1);
+                fragment.appendChild(radioItem);
+            }
+            document.querySelector('.radio-wrapper').appendChild(fragment);
+            document.querySelector('.radio-item:first-child').classList.add('current');
+            tip.innerHTML=array[0];
+            document.querySelector('.notification').classList.remove('close');
+        },5000)
+    }
 }
     
 let closer = document.querySelector('.icon-cancel');
@@ -59,7 +63,7 @@ rightArrow.addEventListener('click', ()=>{move('toRight')});
 let radioWrapper = document.querySelector('.radio-wrapper');
 function navigate(){
     let target = event.target; 
-    if (target.tagName != 'I') return;
+    if (target.tagName !== 'I') return;
     let current = document.querySelector('.current');
     current.classList.remove('current');
     target.classList.add('current');
@@ -79,12 +83,12 @@ function move(){
     let current = document.querySelector('.current');
     let currentIndex=current.getAttribute('name');
     current.classList.remove('current');
-    if(arguments[0]=='toRight'){
-        if (currentIndex == array.length) currentIndex=0;
+    if(arguments[0]==='toRight'){
+        if (+currentIndex === array.length) currentIndex=0;
         document.querySelector(`.radio-item:nth-child(${++currentIndex})`).classList.add('current');
     }
-    if(arguments[0]=='toLeft'){
-        if (currentIndex == 1) currentIndex=array.length+1; 
+    if(arguments[0]==='toLeft'){
+        if (+currentIndex === 1) currentIndex=array.length+1; 
         document.querySelector(`.radio-item:nth-child(${--currentIndex})`).classList.add('current');
     }   
     tip.innerHTML=array[currentIndex-1];
